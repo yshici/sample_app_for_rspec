@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Users", type: :system do
   let(:user){ create(:user) }
   let(:login_user){ create(:user) }
+
   describe 'ログイン前' do
     describe 'ユーザー新規登録' do
       context 'フォームの入力値が正常' do
@@ -99,15 +100,14 @@ RSpec.describe "Users", type: :system do
     describe 'マイページ' do
       context 'タスクを作成' do
         it '新規作成したタスクが表示される' do
-          visit new_task_path
-          fill_in 'Title', with: 'test'
-          fill_in 'Content', with: 'test'
-          select 'todo', from: 'Status'
-          click_button 'Create Task'
-          expect(page).to have_content 'Task was successfully created.'
-          expect(page).to have_content 'Title: test'
-          expect(page).to have_content 'Status: todo'
-          expect(current_path).to include "/tasks/"
+          create(:task, title: 'test_title', status: :doing, user: login_user)
+          visit user_path(login_user)
+          expect(page).to have_content('You have 1 task.')
+          expect(page).to have_content('test_title')
+          expect(page).to have_content('doing')
+          expect(page).to have_link('Show')
+          expect(page).to have_link('Edit')
+          expect(page).to have_link('Destroy')
         end
       end
     end
