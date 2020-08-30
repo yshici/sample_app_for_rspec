@@ -24,12 +24,7 @@ RSpec.describe "Tasks", type: :system do
 
 
   describe 'ログイン後' do
-    before do
-      visit login_path
-      fill_in 'Email', with: user.email
-      fill_in 'Password', with: 'password'
-      click_button 'Login'
-    end
+    before { login user }
     describe 'タスク新規作成' do
       context 'フォームの入力値が正常' do
         it 'タスクの新規作成が成功する' do
