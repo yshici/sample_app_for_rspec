@@ -13,6 +13,7 @@ RSpec.describe "Users", type: :system do
           fill_in 'Password confirmation', with: 'password'
           click_button 'SignUp'
           expect(page).to have_content 'User was successfully created.'
+          expect(current_path).to eq login_path
         end
       end
       context 'メールアドレスが未入力' do
@@ -23,6 +24,7 @@ RSpec.describe "Users", type: :system do
           fill_in 'Password confirmation', with: 'password'
           click_button 'SignUp'
           expect(page).to have_content "Email can't be blank"
+          expect(current_path).to eq users_path
         end
       end
       context '登録済のメールアドレスを使用' do
@@ -33,6 +35,7 @@ RSpec.describe "Users", type: :system do
           fill_in 'Password confirmation', with: 'password'
           click_button 'SignUp'
           expect(page).to have_content 'Email has already been taken'
+          expect(current_path).to eq users_path
         end
       end
     end
@@ -42,6 +45,7 @@ RSpec.describe "Users", type: :system do
         it 'マイページへのアクセスが失敗する' do
           visit user_path(user.id)
           expect(page).to have_content 'Login required'
+          expect(current_path).to eq login_path
         end
       end
     end
@@ -63,6 +67,7 @@ RSpec.describe "Users", type: :system do
           fill_in 'Password confirmation', with: 'password'
           click_button 'Update'
           expect(page).to have_content 'User was successfully updated.'
+          expect(current_path).to eq user_path(login_user)
         end
       end
       context 'メールアドレスが未入力' do
@@ -73,6 +78,7 @@ RSpec.describe "Users", type: :system do
           fill_in 'Password confirmation', with: 'password'
           click_button 'Update'
           expect(page).to have_content "Email can't be blank"
+          expect(current_path).to eq user_path(login_user)
         end
       end
       context '登録済のメールアドレスを使用' do
@@ -83,12 +89,14 @@ RSpec.describe "Users", type: :system do
           fill_in 'Password confirmation', with: 'password'
           click_button 'Update'
           expect(page).to have_content 'Email has already been taken'
+          expect(current_path).to eq user_path(login_user)
         end
       end
       context '他ユーザーの編集ページにアクセス' do
         it '編集ページへのアクセスが失敗する' do
           visit edit_user_path(user)
           expect(page).to have_content 'Forbidden access.'
+          expect(current_path).to eq user_path(login_user)
         end
       end
     end
@@ -104,6 +112,7 @@ RSpec.describe "Users", type: :system do
           expect(page).to have_content 'Task was successfully created.'
           expect(page).to have_content 'Title: test'
           expect(page).to have_content 'Status: todo'
+          expect(current_path).to include "/tasks/"
         end
       end
     end
